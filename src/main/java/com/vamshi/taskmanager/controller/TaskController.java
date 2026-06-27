@@ -1,5 +1,6 @@
 package com.vamshi.taskmanager.controller;
 
+import jakarta.validation.Valid;
 import com.vamshi.taskmanager.model.Task;
 import com.vamshi.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,15 @@ public class TaskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
         Task created = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
         return ResponseEntity.ok(taskService.updateTask(id, task));
     }
 

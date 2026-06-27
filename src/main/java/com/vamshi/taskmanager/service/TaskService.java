@@ -2,6 +2,7 @@ package com.vamshi.taskmanager.service;
 
 import com.vamshi.taskmanager.model.Task;
 import com.vamshi.taskmanager.repository.TaskRepository;
+import com.vamshi.taskmanager.exception.TaskNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -27,7 +28,7 @@ public class TaskService {
     }
     public Task updateTask(Long id, Task updatedTask) {
         Task existing = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                .orElseThrow(() -> new TaskNotFoundException(id));
         existing.setTitle(updatedTask.getTitle());
         existing.setDescription(updatedTask.getDescription());
         existing.setPriority(updatedTask.getPriority());
