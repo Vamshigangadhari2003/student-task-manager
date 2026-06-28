@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📚 Student Task Manager</h1>
+        <p>Manage your assignments and tasks</p>
+    </header>
+
+    <!-- Add Task Form -->
+    <div class="form-card">
+        <h2>Add New Task</h2>
+        <div class="form-group">
+            <input type="text" id="title" placeholder="Task title (min 3 characters)" />
+        </div>
+        <div class="form-group">
+            <input type="text" id="description" placeholder="Description (optional)" />
+        </div>
+        <div class="form-group">
+            <select id="priority">
+                <option value="">Select Priority</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="date" id="dueDate" />
+        </div>
+        <button class="btn btn-add" onclick="createTask()">Add Task</button>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-bar">
+        <button class="btn btn-filter active" onclick="filterTasks('ALL', this)">All</button>
+        <button class="btn btn-filter" onclick="filterTasks('PENDING', this)">Pending</button>
+        <button class="btn btn-filter" onclick="filterTasks('COMPLETED', this)">Completed</button>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error-msg" class="error-msg"></div>
+
+    <!-- Task List -->
+    <div id="task-list" class="task-list"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

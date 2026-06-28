@@ -16,5 +16,7 @@ public class TaskRequestDTO {
     @Pattern(regexp = "LOW|MEDIUM|HIGH", message = "Priority must be LOW, MEDIUM, or HIGH")
     private String priority;
 
+    private String status; //this three lines
+
     private LocalDate dueDate;
 }

@@ -32,6 +32,7 @@ public class TaskService {
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
         task.setPriority(dto.getPriority());
+        task.setStatus(dto.getStatus());
         task.setDueDate(dto.getDueDate());
         return task;
     }
@@ -61,6 +62,7 @@ public class TaskService {
         existing.setTitle(dto.getTitle());
         existing.setDescription(dto.getDescription());
         existing.setPriority(dto.getPriority());
+        existing.setStatus(dto.getStatus());  //this line
         existing.setDueDate(dto.getDueDate());
         return convertToDTO(taskRepository.save(existing));
     }
