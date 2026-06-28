@@ -1,12 +1,14 @@
 package com.vamshi.taskmanager.service;
 
+import com.vamshi.taskmanager.dto.TaskRequestDTO;
+import com.vamshi.taskmanager.dto.TaskResponseDTO;
+import com.vamshi.taskmanager.exception.TaskNotFoundException;
 import com.vamshi.taskmanager.model.Task;
 import com.vamshi.taskmanager.repository.TaskRepository;
-import com.vamshi.taskmanager.exception.TaskNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -14,34 +16,65 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    private TaskResponseDTO convertToDTO(Task task) {
+        TaskResponseDTO dto = new TaskResponseDTO();
+        dto.setId(task.getId());
+        dto.setTitle(task.getTitle());
+        dto.setDescription(task.getDescription());
+        dto.setPriority(task.getPriority());
+        dto.setStatus(task.getStatus());
+        dto.setDueDate(task.getDueDate());
+        return dto;
     }
 
-    public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
+    private Task convertToEntity(TaskRequestDTO dto) {
+        Task task = new Task();
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+        task.setPriority(dto.getPriority());
+        task.setDueDate(dto.getDueDate());
+        return task;
     }
 
-    public Task createTask(Task task) {
+    public List<TaskResponseDTO> getAllTasks() {
+        return taskRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public TaskResponseDTO getTaskById(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
+        return convertToDTO(task);
+    }
+
+    public TaskResponseDTO createTask(TaskRequestDTO dto) {
+        Task task = convertToEntity(dto);
         task.setStatus("PENDING");
-        return taskRepository.save(task);
+        return convertToDTO(taskRepository.save(task));
     }
-    public Task updateTask(Long id, Task updatedTask) {
+
+    public TaskResponseDTO updateTask(Long id, TaskRequestDTO dto) {
         Task existing = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
-        existing.setTitle(updatedTask.getTitle());
-        existing.setDescription(updatedTask.getDescription());
-        existing.setPriority(updatedTask.getPriority());
-        existing.setStatus(updatedTask.getStatus());
-        existing.setDueDate(updatedTask.getDueDate());
-        return taskRepository.save(existing);
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setPriority(dto.getPriority());
+        existing.setDueDate(dto.getDueDate());
+        return convertToDTO(taskRepository.save(existing));
     }
 
     public void deleteTask(Long id) {
+        taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
         taskRepository.deleteById(id);
     }
 
-    public List<Task> getTasksByStatus(String status) {
-        return taskRepository.findByStatus(status);
+    public List<TaskResponseDTO> getTasksByStatus(String status) {
+        return taskRepository.findByStatus(status)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

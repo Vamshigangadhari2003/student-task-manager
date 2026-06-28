@@ -1,8 +1,9 @@
 package com.vamshi.taskmanager.controller;
 
-import jakarta.validation.Valid;
-import com.vamshi.taskmanager.model.Task;
+import com.vamshi.taskmanager.dto.TaskRequestDTO;
+import com.vamshi.taskmanager.dto.TaskResponseDTO;
 import com.vamshi.taskmanager.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,33 +13,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "*")
-
 public class TaskController {
+
     @Autowired
     private TaskService taskService;
 
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<List<TaskResponseDTO>> getAllTasks() {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
-
     @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
-        Task created = taskService.createTask(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<TaskResponseDTO> createTask(@Valid @RequestBody TaskRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
-        return ResponseEntity.ok(taskService.updateTask(id, task));
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
+        return ResponseEntity.ok(taskService.updateTask(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -48,9 +45,7 @@ public class TaskController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Task>> getByStatus(@PathVariable String status) {
+    public ResponseEntity<List<TaskResponseDTO>> getByStatus(@PathVariable String status) {
         return ResponseEntity.ok(taskService.getTasksByStatus(status));
     }
 }
-
-
