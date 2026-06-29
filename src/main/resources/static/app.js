@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api/tasks';
+const API_BASE_URL = 'https://student-task-manager-production-60e8.up.railway.app/api/tasks';
 
 let currentFilter = 'ALL';
 
